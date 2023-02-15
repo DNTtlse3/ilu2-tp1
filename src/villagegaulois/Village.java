@@ -8,10 +8,88 @@ public class Village {
 	private Chef chef;
 	private Gaulois[] villageois;
 	private int nbVillageois = 0;
-
-	public Village(String nom, int nbVillageoisMaximum) {
+	
+	private Marche marche;
+	
+		
+	
+	/*Déclaration de le classe inter Marche*/
+	private static class Marche{
+		private Etal[] etals;
+		private int nbetals;
+		
+		private Marche(int nbetals) {
+			this.nbetals = nbetals;
+			etals = new Etal[nbetals];
+			installerEtal(etals);
+			
+		}
+		
+		private void installerEtal(Etal[] etals) {
+			for(int k=0; k< etals.length;k++) {
+				etals[k] = new Etal();
+			}
+			
+		}
+		
+		void utiliserEtal(int indiceEtal,Gaulois vendeur,String produit, int nbProduit) {
+			if(indiceEtal < nbetals) {
+				etals[indiceEtal].occuperEtal(vendeur, produit, nbProduit);
+			}
+			
+			
+		}
+		
+		int trouverEtalLibre() {
+			for(int k=0;k<etals.length;k++) {
+				/*Si l'étale est libre*/
+				if(!(etals[k].isEtalOccupe())) {
+					return k;
+				}
+			}
+			/**/
+			return -1;
+		}
+		
+		
+		/**/
+		private int nbVendeurAvecProduitChercher(String produit) {
+			int trouve=0;
+			for(int k=0;k<etals.length;k++) {
+				if(etals[k].contientProduit(produit)) {
+					trouve++;
+				}
+			}
+			return trouve;
+		}
+		
+		
+		Etal[] trouverVendeur(String produit) {
+			
+			int trouve = nbVendeurAvecProduitChercher(produit);	
+			/*Tableau*/
+			Etal[] etalsTrouve = new Etal[trouve];
+			int indiceEtalsTrouve = 0;
+			
+			/**/
+			for(int k=0;k<etalsTrouve.length;k++) {
+				if(etals[k].contientProduit(produit)) {
+					etalsTrouve[indiceEtalsTrouve] = etals[k];
+				}
+			}
+			/**/
+			return etalsTrouve;
+		
+			
+		}
+	}
+	
+	public Village(String nom, int nbVillageoisMaximum,int nbetals) {
 		this.nom = nom;
 		villageois = new Gaulois[nbVillageoisMaximum];
+		this.marche = new Marche(nbetals);
+		
+		
 	}
 
 	public String getNom() {
